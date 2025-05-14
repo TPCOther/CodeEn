@@ -12,10 +12,14 @@ The directory structure of this repository is shown as below:
 |-- Dataset           # Dataset for training and validation
 |-- outputs           # The final experimental results
 |-- src	              # Scripts for all the experiments
-    |-- *_ChatRepair_Ablation.py	           # The script of ablation experiments.
-    |-- ATLAS_ChatRepair_parameter.py	       # The script of parameter analysis experiments.
+    |-- *_ChatRepair_Ablation.py	             # The script of ablation experiments using RFE.
+    |-- *_ChatRepair_Ablation_s.py	           # The script of ablation experiments using single indicator(metrics\classifier).
+    |-- ATLAS_ChatRepair_hyper.py	       # The script of parameter k analysis experiments.
+    |-- *_ChatRepair_weight.py	           # The script of STOS weight analysis experiments.
     |-- *_ChatRepair_gpt.py	                   # The main function of CodEn with GPT
     |-- *_ChatRepair_osmodel.py	               # The main function of CodEn with open source model
+    |-- *_ChatRepair_agent.py	                   # Repair using the agent
+    |-- *_ChatRepair_sample.py	                 # CodEn with traditional sampling methods
     |-- *_ChatRepair_count.py	               # The script of experimental evaluation
     |-- *_ChatRepair_models.py	               # The custom class that support the execution of CodEn
     |-- *_ChatRepair_prompt_construction.py	               # The configuration file       
@@ -51,6 +55,15 @@ sys_prompt = "Fix ESLint error in the following JavaScript code. Place your gene
 sys_prompt = "Identyfy the correct fix from a set of proposed solutions labeled ###Fix_Code to fix ESLint error in the following JavaScript code. Place your chosen solution between <Repair> and </Repair> tags."
 ```
 
+### Java Bug Fixing Task
+```python
+# Generation prompt:
+sys_prompt = "Your task is to solve a bug-fixing challenge.\nGiven a piece of buggy code represented as '###Buggy_Code', your goal is to generate the correct fix code. Each piece of code, including identifiers and literals, has been abstracted into generic IDs for simplicity. Place your generated solution between <Repair> </Repair> tags.\nLet's think step by step!"
+
+# Selection prompt:
+sys_prompt = "Your task is to solve a bug-fixing challenge.\nGiven a piece of buggy code represented as '###Buggy_Code', your goal is to identify the correct fix from a set of proposed solutions labeled '###Fix_Code'. Each piece of code, including identifiers and literals, has been abstracted into generic IDs for simplicity. Review the buggy code and select the fix that accurately addresses the bug. Place your chosen solution between <Repair> and </Repair> tags.\nConsider the logic, functionality, and compatibility of each fix with the original code to make your decision."
+```
+
 ### Comment Summarization Task
 
 ```python
@@ -78,12 +91,22 @@ Run the following script, to run the experiments for `Bug Fixing`:
 python NBF_ChatRepair_gpt.py
 ```
 
+Run the following script, to run the experiments for `Java Bug Fixing`:
+```
+python BF_ChatRepair_gpt.py
+```
+
 Run the following script, to run the experiments for `Comment Summarization`:
 ```
 python Comment_ChatRepair_gpt.py
 ```
 
 To run the experiments with the open source model, use the `*_osmodel.py`, and change the `model_name` in the `*_osmodel.py` file.
+
+Run the following script, to run the experiments **using agents**:
+```
+python *_ChatRepair_agent.py
+```
 
 ## 🚀 Running Evaluation
 
@@ -92,7 +115,7 @@ After running the experiments, repaired results are saved in the folder: `./outp
 Run the following script, to see the evaluation metrics.
 
 ```
-python *_count.py to obtain the evaluation results of each downstream task.
+python *_count.py  #Obtain the evaluation results of each downstream task.
 ```
 
 ## 🚀 Running Ablation Experiments
@@ -100,5 +123,30 @@ python *_count.py to obtain the evaluation results of each downstream task.
 Run the following script, to see the ablation results.
 
 ```
-python *_ChatRepair_Ablation.py to obtain the ablation results of each downstream task.
+python *_ChatRepair_Ablation.py  #Obtain the ablation results of each downstream task.
+```
+
+Run the following script, to see the ablation results of **different sampling methods**.
+Change the sampling method in the code.
+```
+python *_ChatRepair_sample.py  #Obtain the ablation results of different sampling methods.
+```
+
+Run the following script, to see the ablation results of each downstream task **using single indicator(metrics\classifier)**.
+Change the indicators to test in the code.
+```
+python *_ChatRepair_Ablation_s.py  #Obtain the ablation results of each downstream task using single indicator(metrics\classifier).
+```
+
+Run the following script, to see the ablation results of **weight of STOS**.
+```
+python *_ChatRepair_weight.py  #Obtain the ablation results of weight of STOS.
+```
+
+## 🚀 Running Parameter Analysis
+
+Run the following script, to see the **parameter k** analysis results.
+
+```
+python *_ChatRepair_hyper.py  #Obtain the parameter k analysis results.
 ```
